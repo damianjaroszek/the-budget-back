@@ -8,6 +8,10 @@ recipeRouter
     .get('/listAll', async (req, res) => {
         const recpies: RecipeEntity[] = await RecipeRecord.getAll();
         res.json(recpies);
+    })
+    .get('/listLatestWeek', async (req, res) => {
+        const recpies: RecipeEntity[] = await RecipeRecord.getLastWeek();
+        res.json(recpies);
     });
 
 // .get('/:id', async (req, res) => {
