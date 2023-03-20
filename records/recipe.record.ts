@@ -77,7 +77,7 @@ export class RecipeRecord implements RecipeEntity {
 
     static async getLastWeek(): Promise<RecipeEntity[]> {
         const [results] = await pool.execute('SELECT \n' +
-            '\t`expense`.`id`, CAST(DATE(`expense`.`date`) AS CHAR) AS date, `expense`.`price`, \n' +
+            '\t`expense`.`id`, CAST(DATE(`expense`.`date`) AS CHAR) AS date, CAST(`expense`.`price` AS CHAR) AS price, \n' +
             '\tCONCAT(`index`.`name`, " ", ROUND(`index`.`weight`, 2), `unit`.`symbol`) AS name, \n' +
             '\t`place`.`name` AS shopName, `category`.`name` AS categoryName, `expense`.`fill_date`\n' +
             'FROM `expense`\n' +
