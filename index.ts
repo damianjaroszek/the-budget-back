@@ -2,6 +2,8 @@ import express, {json} from 'express';
 import cors from 'cors';
 import 'express-async-errors';
 import {handleError} from "./utils/error";
+import {RecipeEntity} from "./types";
+import {RecipeRecord} from "./records/recipe.record";
 
 const app = express();
 
@@ -19,6 +21,12 @@ app.use(json());
 // app.get('/', async(req, res)=> {
 //     throw new ValidationError('Something was wrong');  // sprawdzamy czy obsługa błędów działa
 // });
+
+app.get('/', async (req, res) => {
+    const recpies: RecipeEntity[] = await RecipeRecord.getAll();
+    res.json(recpies);
+    console.log(recpies);
+});
 
 // Routers
 app.use(handleError);

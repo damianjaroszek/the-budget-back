@@ -1,10 +1,10 @@
 export interface RecipeEntity {
-    id: string;
+    id?: string;
     date: string;
     price: number;
     name: string;
-    weight: number;
+    //weight: number;
     shopName: string;
-    category: string;
-    symbol: string;
+    categoryName: string;
+    //symbol: string;
 }
