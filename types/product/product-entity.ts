@@ -3,5 +3,5 @@ export interface ProductEntity {
     name: string;
     weight: number;
     categoryName: string;
-    symbol: string;
+    //symbol: string;
 }

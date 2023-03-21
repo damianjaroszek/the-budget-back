@@ -3,6 +3,7 @@ import cors from 'cors';
 import 'express-async-errors';
 import {handleError} from "./utils/error";
 import {recipeRouter} from "./routers/recipe.router";
+import {productRouter} from "./routers/product.router";
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use(json());
 // Routers
 const router = Router();
 router.use('/recipe', recipeRouter)
+router.use('/product', productRouter)
 app.use('/api', router);
 
 app.use(handleError);
