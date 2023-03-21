@@ -4,6 +4,7 @@ import 'express-async-errors';
 import {handleError} from "./utils/error";
 import {recipeRouter} from "./routers/recipe.router";
 import {productRouter} from "./routers/product.router";
+import {shopRouter} from "./routers/shop.router";
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use(json());
 const router = Router();
 router.use('/recipe', recipeRouter)
 router.use('/product', productRouter)
+router.use('/shop', shopRouter)
 app.use('/api', router);
 
 app.use(handleError);
