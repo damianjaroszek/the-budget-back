@@ -33,8 +33,8 @@ export class RecipeRecord implements RecipeEntity {
             throw new ValidationError('The date can not be empty and must contain 10 chars valid with YYYY-MM-DD format.');
         }
 
-        if (obj.price < 0 || obj.price > 9999999) {
-            throw new ValidationError('The price must be contain in scope 0.00 - 9 999 999.');
+        if (obj.price < 0 || obj.price > 9999999.99) {
+            throw new ValidationError('The price must be contain in scope 0.00 - 9 999 999.99.');
         }
 
         // if (obj.weight < 0.00009 || obj.weight > 99999) {
@@ -45,9 +45,6 @@ export class RecipeRecord implements RecipeEntity {
             throw new ValidationError('The shop name can not be empty or contains more than 50 chars.');
         }
 
-        if (!obj.categoryName || obj.categoryName.length > 100) {
-            throw new ValidationError('The name of category can not be empty or contains more than 100 chars.');
-        }
 
         // if (!obj.symbol || obj.symbol.length >= 4) {
         //     throw new ValidationError('The symbol of weight name can not be empty or contains more than 4 chars.');
