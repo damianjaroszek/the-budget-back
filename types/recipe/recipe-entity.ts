@@ -8,3 +8,11 @@ export interface RecipeEntity {
     categoryName: string;
     //symbol: string;
 }
+
+export interface NewRecipe {
+    id?: string;
+    date: Date | null;
+    price: number;
+    productId: string;
+    shopId: string;
+}
