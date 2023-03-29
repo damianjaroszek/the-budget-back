@@ -11,7 +11,7 @@ export interface RecipeEntity {
 
 export interface NewRecipe {
     id?: string;
-    date: Date | null;
+    date: Date | string | null;
     price: number;
     productId: string;
     shopId: string;
