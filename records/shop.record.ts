@@ -32,5 +32,4 @@ export class ShopRecord implements ShopEntity {
         return results.map(result => new ShopRecord(result));
     }
 
-
 }
