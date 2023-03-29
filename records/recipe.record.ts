@@ -74,6 +74,24 @@ export class RecipeRecord implements RecipeEntity {
         return results.map(result => new RecipeRecord(result));
     }
 
+    static async getDateRange(firstDate: string, secondDate: string): Promise<RecipeEntity[]> {
+        const [results] = await pool.execute('SELECT `expense`.`id`, CAST(DATE(`expense`.`date`) AS CHAR) AS date, CAST(`expense`.`price` AS CHAR) AS price,\n' +
+            '            CONCAT(`index`.`name`, " ", ROUND(`index`.`weight`, 2), `unit`.`symbol`) AS name,\n' +
+            '            `place`.`name` AS shopName, `category`.`name` AS categoryName, `expense`.`fill_date`\n' +
+            '            FROM `expense`\n' +
+            '            LEFT JOIN `index` ON `expense`.`index_id`=`index`.`id`\n' +
+            '            LEFT JOIN `place` ON `expense`.`place`=`place`.`id`\n' +
+            '            LEFT JOIN `category` ON `index`.`category`=`category`.`id`\n' +
+            '            LEFT JOIN `unit` ON `index`.`unit`=`unit`.`id`\n' +
+            '            WHERE `expense`.`date` BETWEEN :firstDate AND :secondDate\n' +
+            '            ORDER BY `expense`.`fill_date` DESC', {
+            firstDate,
+            secondDate,
+        }) as RecipeRecordResult;
+        return results.map(result => new RecipeRecord(result));
+    }
+
+
     static async insertToDb(obj: NewRecipe): Promise<string> {
         obj.id = uuid();
         await pool.execute('INSERT INTO `expense` (`id`, `date`, `price`, `index_id`, `place`) VALUES (:id, :date, :price, :index_id, :place)', {
