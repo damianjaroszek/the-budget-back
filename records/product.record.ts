@@ -24,8 +24,8 @@ export class ProductRecord implements ProductEntity {
             throw new ValidationError('The name can not be empty or contains more than 50 chars.');
         }
 
-        if (obj.weight < 0.00009 || obj.weight > 99999) {
-            throw new ValidationError('The weight must be contain in scope 0.00009 - 99 999.');
+        if (obj.weight < 0.01 || obj.weight > 9999999.99) {
+            throw new ValidationError('The weight must be contain in scope 0.01 -  9 999 999.99.');
         }
 
         // if (!obj.categoryName || obj.categoryName.length > 100) {
@@ -48,10 +48,9 @@ export class ProductRecord implements ProductEntity {
 
     static async getAll(): Promise<ProductEntity[]> {
         const [results] = await pool.execute('SELECT \n' +
-            '\t`expense`.`id`, CONCAT(`index`.`name`, " ", ROUND(`index`.`weight`, 2), `unit`.`symbol`) AS name\n' +
-            'FROM `expense`\n' +
-            'LEFT JOIN `index` ON `expense`.`index_id`=`index`.`id`\n' +
-            'LEFT JOIN `unit` ON `index`.`unit`=`unit`.`id`\n') as ProductRecordResult;
+            '\t`index`.`id`, CONCAT(`index`.`name`, " ", ROUND(`index`.`weight`, 2), `unit`.`symbol`) AS name\n' +
+            'FROM `index`\n' +
+            'LEFT JOIN `unit` ON `index`.`unit`=`unit`.`id`') as ProductRecordResult;
         return results.map(result => new ProductRecord(result));
     }
 
