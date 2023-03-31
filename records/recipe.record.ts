@@ -1,4 +1,4 @@
-import {NewRecipe, RecipeEntity} from "../types";
+import {NewRecipe, RecipeEntity, TotalSum} from "../types";
 import {ValidationError} from "../utils/error";
 import {regexp} from "../utils/regexpFormatDate";
 import {pool} from "../utils/db";
@@ -6,6 +6,7 @@ import {FieldPacket} from "mysql2";
 import {v4 as uuid} from "uuid";
 
 type RecipeRecordResult = [RecipeEntity[], FieldPacket[]];
+type TotalSumOfCostsResult = [TotalSum, FieldPacket[]];
 
 interface NewRecipeEntity extends Omit<RecipeEntity, 'id'> {
     id?: string;
