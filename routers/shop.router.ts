@@ -10,6 +10,12 @@ shopRouter
         const products: ShopEntity[] = await ShopRecord.getAll();
         res.json(products);
     })
+    .delete('/:id', async (req, res) => {
+        const deleteShop = await ShopRecord.deleteFromDb(req.params.id);
+        res.json(deleteShop);
+        console.log(deleteShop)
+    });
+
 
 // .get('/:id', async (req, res) => {
 //     const ad: AdEntity = await AdRecord.getOne(req.params.id);
