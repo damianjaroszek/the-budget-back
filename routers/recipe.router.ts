@@ -15,14 +15,12 @@ recipeRouter
         res.json(recipes);
     })
     .get('/getDateRange/:firstDate/:secondDate', async (req, res) => {
-        console.log(req.params.firstDate, req.params.secondDate);
         const recipes: RecipeEntity[] = await RecipeRecord.getDateRange(req.params.firstDate, req.params.secondDate);
-        //const recipes: RecipeEntity[] = await RecipeRecord.getDateRange('2023-03-29', '2023-03-29');
         res.json(recipes);
-        console.log(recipes);
     })
     .post('/', async (req, res) => {
         const newRecipe = await RecipeRecord.insertToDb(req.body);
+        console.log(req.body);
         res.json(newRecipe);
 
     })
@@ -47,3 +45,4 @@ recipeRouter
 //     res.json(ad);
 //
 // });
+
