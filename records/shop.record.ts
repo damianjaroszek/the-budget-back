@@ -13,6 +13,7 @@ export class ShopRecord implements ShopEntity {
 
     id?: string;
     name: string;
+    isDeletable: number;
 
 
     constructor(obj: NewShopEntity) {
@@ -22,14 +23,26 @@ export class ShopRecord implements ShopEntity {
 
         this.id = obj.id;
         this.name = obj.name;
-
+        this.isDeletable = obj.isDeletable;
 
     }
 
 
     static async getAll(): Promise<ShopEntity[]> {
-        const [results] = await pool.execute('SELECT * FROM `the_budget`.`place`') as ShopRecordResult;
+        const [results] = await pool.execute('SELECT `id`, `name`, `is_deletable` AS isDeletable FROM `the_budget`.`place`') as ShopRecordResult;
         return results.map(result => new ShopRecord(result));
+    }
+
+
+    static async deleteFromDb(id: string): Promise<ShopRecordResult[]> {
+        if (!id) {
+            throw new Error(`Shop with ${id} is not exist in database.`)
+        }
+
+        const [affectedRows] = await pool.execute('DELETE FROM `the_budget`.`place` WHERE `place`.`id`=:id', {
+            id,
+        });
+        return affectedRows as ShopRecordResult[];
     }
 
 }
