@@ -51,40 +51,39 @@ export class RecipeRecord implements RecipeEntity {
     }
 
     static async getAll(): Promise<RecipeEntity[]> {
-        const [results] = await pool.execute('SELECT `expense`.`id`, CAST(DATE(`expense`.`date`) AS CHAR) AS date, `expense`.`price`, CONCAT(`index`.`name`, " ", ROUND(`index`.`weight`, 2), `unit`.`symbol`) AS name, `place`.`name` AS shopName, `category`.`name` AS categoryName \n' +
-            'FROM `expense`\n' +
-            'LEFT JOIN `index` ON `expense`.`index_id`=`index`.`id`\n' +
-            'LEFT JOIN `place` ON `expense`.`place`=`place`.`id`\n' +
-            'LEFT JOIN `category` ON `index`.`category`=`category`.`id`\n' +
-            'LEFT JOIN `unit` ON `index`.`unit`=`unit`.`id`') as RecipeRecordResult;
+        const [results] = await pool.execute('SELECT `expense`.`id`, CAST(DATE(`expense`.`date`) AS CHAR) AS date, `expense`.`price`, `index`.`name`, `place`.`name` AS shopName, `category`.`name` AS categoryName\n' +
+            '            FROM `expense`\n' +
+            '            LEFT JOIN `index` ON `expense`.`index_id`=`index`.`id`\n' +
+            '            LEFT JOIN `place` ON `expense`.`place`=`place`.`id`\n' +
+            '            LEFT JOIN `category` ON `index`.`category`=`category`.`id`') as RecipeRecordResult;
         return results.map(result => new RecipeRecord(result));
     }
 
     static async getLastWeek(): Promise<RecipeEntity[]> {
         const [results] = await pool.execute('SELECT `expense`.`id`, CAST(DATE(`expense`.`date`) AS CHAR) AS date, CAST(`expense`.`price` AS CHAR) AS price,\n' +
-            '            CONCAT(`index`.`name`, " ", ROUND(`index`.`weight`, 2), `unit`.`symbol`) AS name,\n' +
-            '            `place`.`name` AS shopName, `category`.`name` AS categoryName, `expense`.`fill_date`\n' +
-            '            FROM `expense`\n' +
-            '            LEFT JOIN `index` ON `expense`.`index_id`=`index`.`id`\n' +
-            '            LEFT JOIN `place` ON `expense`.`place`=`place`.`id`\n' +
-            '            LEFT JOIN `category` ON `index`.`category`=`category`.`id`\n' +
-            '            LEFT JOIN `unit` ON `index`.`unit`=`unit`.`id`\n' +
-            '            WHERE `expense`.`fill_date` BETWEEN CURRENT_TIMESTAMP() - interval 1 week AND CURRENT_TIMESTAMP()\n' +
-            '            ORDER BY `expense`.`fill_date` DESC') as RecipeRecordResult;
+            '                      `index`.`name`,\n' +
+            '                      `place`.`name` AS shopName, `category`.`name` AS categoryName, `expense`.`fill_date`\n' +
+            '          \t\t\t\t  FROM `expense`\n' +
+            '          \t\t\t\t  LEFT JOIN `index` ON `expense`.`index_id`=`index`.`id`\n' +
+            '                       LEFT JOIN `place` ON `expense`.`place`=`place`.`id`\n' +
+            '                       LEFT JOIN `category` ON `index`.`category`=`category`.`id`\n' +
+            '                     \n' +
+            '                      WHERE `expense`.`fill_date` BETWEEN CURRENT_TIMESTAMP() - interval 1 week AND CURRENT_TIMESTAMP()\n' +
+            '                      ORDER BY `expense`.`fill_date` DESC') as RecipeRecordResult;
         return results.map(result => new RecipeRecord(result));
     }
 
     static async getDateRange(firstDate: string, secondDate: string): Promise<RecipeEntity[]> {
         const [results] = await pool.execute('SELECT `expense`.`id`, CAST(DATE(`expense`.`date`) AS CHAR) AS date, CAST(`expense`.`price` AS CHAR) AS price,\n' +
-            '            CONCAT(`index`.`name`, " ", ROUND(`index`.`weight`, 2), `unit`.`symbol`) AS name,\n' +
-            '            `place`.`name` AS shopName, `category`.`name` AS categoryName, `expense`.`fill_date`\n' +
-            '            FROM `expense`\n' +
-            '            LEFT JOIN `index` ON `expense`.`index_id`=`index`.`id`\n' +
-            '            LEFT JOIN `place` ON `expense`.`place`=`place`.`id`\n' +
-            '            LEFT JOIN `category` ON `index`.`category`=`category`.`id`\n' +
-            '            LEFT JOIN `unit` ON `index`.`unit`=`unit`.`id`\n' +
-            '            WHERE `expense`.`date` BETWEEN :firstDate AND :secondDate\n' +
-            '            ORDER BY `expense`.`fill_date` DESC', {
+            '                        `index`.`name`,\n' +
+            '                        `place`.`name` AS shopName, `category`.`name` AS categoryName, `expense`.`fill_date`\n' +
+            '                      FROM `expense`\n' +
+            '                       LEFT JOIN `index` ON `expense`.`index_id`=`index`.`id`\n' +
+            '                       LEFT JOIN `place` ON `expense`.`place`=`place`.`id`\n' +
+            '                      LEFT JOIN `category` ON `index`.`category`=`category`.`id`\n' +
+            '             \n' +
+            '                        WHERE `expense`.`date` BETWEEN :firstDate AND :secondDate\n' +
+            '                       ORDER BY `expense`.`fill_date` DESC', {
             firstDate,
             secondDate,
         }) as RecipeRecordResult;
@@ -105,7 +104,7 @@ export class RecipeRecord implements RecipeEntity {
     }
 
     static async deleteFromDb(id: string): Promise<any> {
-        const affectedRows = await pool.execute('DELETE FROM `expense` WHERE `expense`.`id`=:id', {
+        const affectedRows = await pool.execute('DELETE FROM `the_budget`.`expense` WHERE `the_budget`.`expense`.`id`=:id', {
             id,
         });
         return affectedRows;
