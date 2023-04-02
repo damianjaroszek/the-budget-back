@@ -1,13 +1,12 @@
-import {ShopEntity} from "../types";
+import {NewShopEntity, ShopEntity} from "../types";
 import {ValidationError} from "../utils/error";
 import {pool} from "../utils/db";
 import {FieldPacket} from "mysql2";
+import {v4 as uuid} from "uuid";
 
 type ShopRecordResult = [ShopEntity[], FieldPacket[]];
 
-interface NewShopEntity extends Omit<ShopEntity, 'id'> {
-    id?: string;
-}
+
 
 export class ShopRecord implements ShopEntity {
 
@@ -43,6 +42,27 @@ export class ShopRecord implements ShopEntity {
             id,
         });
         return affectedRows as ShopRecordResult[];
+    }
+
+    // static async insertToDb(obj: NewShopEntity): Promise<string> {
+    //     obj.id = uuid();
+    //     await pool.execute('INSERT INTO `the_budget`.`place` (`name`) VALUES (:name)', {
+    //         id: obj.id,
+    //         name: obj.name,
+    //     });
+    //     return obj.id;
+    // }
+    //
+    async insertToDb(): Promise<string> {
+        if (!this.id) {
+            this.id = uuid();
+        } else {
+            throw new ValidationError('The shop is already exist.')
+        }
+        await pool.execute('INSERT INTO `the_budget`.`place` (`name`) VALUES (:name)', {
+            name: this.name,
+        });
+        return this.id;
     }
 
 }
