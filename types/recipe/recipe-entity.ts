@@ -15,7 +15,7 @@ export interface NewRecipe {
     price: number;
     productId: string;
     shopId: string;
-    categoryName: string;
+    //categoryName: string;
 }
 
 export type TotalSum = { total_cost: number }[];
