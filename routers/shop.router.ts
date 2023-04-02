@@ -7,13 +7,19 @@ export const shopRouter = Router();
 
 shopRouter
     .get('/listAll', async (req, res) => {
-        const products: ShopEntity[] = await ShopRecord.getAll();
-        res.json(products);
+        const shops: ShopEntity[] = await ShopRecord.getAll();
+        res.json(shops);
     })
     .delete('/:id', async (req, res) => {
         const deleteShop = await ShopRecord.deleteFromDb(req.params.id);
         res.json(deleteShop);
-        console.log(deleteShop)
+    })
+    .post('/', async (req, res) => {
+        const addShop = new ShopRecord(req.body);
+        console.log(addShop);
+        await addShop.insertToDb();
+        res.json(addShop);
+
     });
 
 
