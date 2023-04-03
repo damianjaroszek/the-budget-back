@@ -5,6 +5,7 @@ import {handleError} from "./utils/error";
 import {recipeRouter} from "./routers/recipe.router";
 import {productRouter} from "./routers/product.router";
 import {shopRouter} from "./routers/shop.router";
+import {categoryRouter} from "./routers/category.router";
 
 const app = express();
 
@@ -34,6 +35,7 @@ const router = Router();
 router.use('/recipe', recipeRouter)
 router.use('/product', productRouter)
 router.use('/shop', shopRouter)
+router.use('/category', categoryRouter)
 app.use('/api', router);
 
 app.use(handleError);
