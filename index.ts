@@ -6,6 +6,7 @@ import {recipeRouter} from "./routers/recipe.router";
 import {productRouter} from "./routers/product.router";
 import {shopRouter} from "./routers/shop.router";
 import {categoryRouter} from "./routers/category.router";
+import {budgetRouter} from "./routers/budget.router";
 
 const app = express();
 
@@ -36,6 +37,7 @@ router.use('/recipe', recipeRouter)
 router.use('/product', productRouter)
 router.use('/shop', shopRouter)
 router.use('/category', categoryRouter)
+router.use('/budget', budgetRouter)
 app.use('/api', router);
 
 app.use(handleError);

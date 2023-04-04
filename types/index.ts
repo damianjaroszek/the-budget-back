@@ -3,3 +3,4 @@ export * from './recipe';
 export * from './product';
 export * from './shop';
 export * from './category';
+export * from './budget';
