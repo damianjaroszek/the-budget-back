@@ -1,10 +1,9 @@
 import {ValidationError} from "../utils/error";
 import {pool} from "../utils/db";
-import {FieldPacket} from "mysql2";
+import {FieldPacket, ResultSetHeader} from "mysql2";
 import {BudgetEntity, NewBudgetEntity} from "../types";
 
 type BudgetRecordResult = [BudgetEntity[], FieldPacket[]];
-
 
 export class BudgetRecord implements BudgetEntity {
 
@@ -13,7 +12,7 @@ export class BudgetRecord implements BudgetEntity {
 
 
     constructor(obj: NewBudgetEntity) {
-        if (!obj.budget || obj.budget > 999999999.99) {
+        if (!obj.budget || obj.budget > 999999999.99 && obj.budget <= 0) {
             throw new ValidationError('The value of budget can not be empty or be grater than 999999999.99.');
         }
 
@@ -24,8 +23,17 @@ export class BudgetRecord implements BudgetEntity {
 
 
     static async getBudgetAndExpense(): Promise<BudgetEntity[]> {
-        const [results] = await pool.execute('SELECT (SELECT * FROM `the_budget`.`budget`) AS budget, SUM(price) AS expense FROM `the_budget`.`expense`') as BudgetRecordResult;
+        const [results] = await pool.execute('SELECT (SELECT * FROM `the_budget`.`budget`) AS budget, SUM(price) AS expense FROM `the_budget`.`expense`\n' +
+            'WHERE MONTH(`expense`.`date`) = MONTH(NOW()) AND YEAR(`expense`.`date`) = YEAR(now());') as BudgetRecordResult;
         return results.map(result => new BudgetRecord(result));
+    }
+
+    static async updateBudget(newBudgetValue: number): Promise<number> {
+        const [results] = ((await pool.execute('UPDATE `the_budget`.`budget`\n' +
+            'SET `budget`.`budget` = :newBudgetValue;', {
+            newBudgetValue
+        })) as ResultSetHeader[]);
+        return results.affectedRows;
     }
 
     //
