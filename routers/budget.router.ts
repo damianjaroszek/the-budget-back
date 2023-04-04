@@ -9,6 +9,10 @@ budgetRouter
     .get('/showBudgetExpense', async (req, res) => {
         const budgetAndExpense: BudgetEntity[] = await BudgetRecord.getBudgetAndExpense();
         res.json(budgetAndExpense);
+    })
+    .put('/', async (req, res) => {
+        const newBudgetValue = await BudgetRecord.updateBudget(req.body.budget)
+        console.log(newBudgetValue);
     });
 // .delete('/:id', async (req, res) => {
 //     const deleteShop = await ShopRecord.deleteFromDb(req.params.id);
