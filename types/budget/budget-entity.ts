@@ -8,4 +8,10 @@ export interface NewBudgetEntity extends Omit<BudgetEntity, 'expense'> {
 }
 
 
+export interface StatsFromBudget {
+    categoryName: string,
+    expenseSum: number
+};
+
+
 
