@@ -1,9 +1,10 @@
 import {ValidationError} from "../utils/error";
 import {pool} from "../utils/db";
 import {FieldPacket, ResultSetHeader} from "mysql2";
-import {BudgetEntity, NewBudgetEntity} from "../types";
+import {BudgetEntity, NewBudgetEntity, StatsFromBudget} from "../types";
 
 type BudgetRecordResult = [BudgetEntity[], FieldPacket[]];
+
 
 export class BudgetRecord implements BudgetEntity {
 
@@ -23,8 +24,8 @@ export class BudgetRecord implements BudgetEntity {
 
 
     static async getBudgetAndExpense(): Promise<BudgetEntity[]> {
-        const [results] = await pool.execute('SELECT (SELECT * FROM `the_budget`.`budget`) AS budget, SUM(price) AS expense FROM `the_budget`.`expense`\n' +
-            'WHERE MONTH(`expense`.`date`) = MONTH(NOW()) AND YEAR(`expense`.`date`) = YEAR(now());') as BudgetRecordResult;
+        const [results] = await pool.execute('SELECT (SELECT * FROM `the_budget`.`budget`) AS budget, IFNULL((SELECT SUM(price) FROM `the_budget`.`expense`\n' +
+            '            WHERE MONTH(`expense`.`date`) = MONTH(NOW()) AND YEAR(`expense`.`date`) = YEAR(NOW())),0) AS expense') as BudgetRecordResult;
         return results.map(result => new BudgetRecord(result));
     }
 
@@ -34,6 +35,16 @@ export class BudgetRecord implements BudgetEntity {
             newBudgetValue
         })) as ResultSetHeader[]);
         return results.affectedRows;
+    }
+
+    static async getStatsPerCategory() {
+        const [results] = await pool.execute(' SELECT `category`.`name` AS categoryName, SUM(`expense`.`price`) AS expenseSum\n' +
+            '        FROM `expense`\n' +
+            '        LEFT JOIN `index` ON `expense`.`index_id`=`index`.`id`\n' +
+            '        LEFT JOIN `place` ON `expense`.`place`=`place`.`id`\n' +
+            '        LEFT JOIN `category` ON `index`.`category`=`category`.`id`\n' +
+            '        GROUP BY `category`.`name`') as [StatsFromBudget[], FieldPacket[]];
+        return results.length !== 0 ? results.map(result => result) : [{categoryName: 'No category', expenseSum: 1}];
     }
 
     //
