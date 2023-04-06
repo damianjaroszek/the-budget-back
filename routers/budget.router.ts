@@ -1,5 +1,5 @@
 import {Router} from "express";
-import {BudgetEntity} from "../types";
+import {BudgetEntity, StatsFromBudget} from "../types";
 
 import {BudgetRecord} from "../records/budget.record";
 
@@ -10,9 +10,13 @@ budgetRouter
         const budgetAndExpense: BudgetEntity[] = await BudgetRecord.getBudgetAndExpense();
         res.json(budgetAndExpense);
     })
+    .get('/getStatsPerCategory', async (req, res) => {
+        const getStats: StatsFromBudget[] = await BudgetRecord.getStatsPerCategory();
+        res.json(getStats);
+    })
     .put('/', async (req, res) => {
         const newBudgetValue = await BudgetRecord.updateBudget(req.body.budget)
-        console.log(newBudgetValue);
+        res.json(newBudgetValue);
     });
 // .delete('/:id', async (req, res) => {
 //     const deleteShop = await ShopRecord.deleteFromDb(req.params.id);
