@@ -2,6 +2,7 @@ import {ValidationError} from "../utils/error";
 import {pool} from "../utils/db";
 import {FieldPacket} from "mysql2";
 import {CategoryEntity, NewCategoryEntity} from "../types/category";
+import {v4 as uuid} from "uuid";
 
 type CategoryRecordResult = [CategoryEntity[], FieldPacket[]];
 
@@ -30,28 +31,28 @@ export class CategoryRecord implements CategoryEntity {
         return results.map(result => new CategoryRecord(result));
     }
 
-    //
-    // static async deleteFromDb(id: string): Promise<CategoryRecordResult[]> {
-    //     if (!id) {
-    //         throw new Error(`Shop with ${id} is not exist in database.`)
-    //     }
-    //
-    //     const [affectedRows] = await pool.execute('DELETE FROM `the_budget`.`place` WHERE `place`.`id`=:id', {
-    //         id,
-    //     });
-    //     return affectedRows as CategoryRecordResult[];
-    // }
-    //
-    // async insertToDb(): Promise<string> {
-    //     if (!this.id) {
-    //         this.id = uuid();
-    //     } else {
-    //         throw new ValidationError('The shop is already exist.')
-    //     }
-    //     await pool.execute('INSERT INTO `the_budget`.`place` (`name`) VALUES (:name)', {
-    //         name: this.name,
-    //     });
-    //     return this.id;
-    // }
+    static async deleteFromDb(id: string): Promise<CategoryRecordResult[]> {
+        if (!id) {
+            throw new Error(`Category with ${id} is not exist in database.`)
+        }
+
+        const [affectedRows] = await pool.execute('DELETE FROM `the_budget`.`category` WHERE `category`.`id`=:id', {
+            id,
+        });
+        return affectedRows as CategoryRecordResult[];
+    }
+
+    async insertToDb(): Promise<string> {
+        if (!this.id) {
+            this.id = uuid();
+        } else {
+            throw new ValidationError('The category is already exist.')
+        }
+        await pool.execute('INSERT INTO `the_budget`.`category` (`name`) VALUES (:name)', {
+            name: this.name,
+        });
+        return this.id;
+    }
+
 
 }
