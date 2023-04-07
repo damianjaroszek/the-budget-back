@@ -44,15 +44,6 @@ export class ShopRecord implements ShopEntity {
         return affectedRows as ShopRecordResult[];
     }
 
-    // static async insertToDb(obj: NewShopEntity): Promise<string> {
-    //     obj.id = uuid();
-    //     await pool.execute('INSERT INTO `the_budget`.`place` (`name`) VALUES (:name)', {
-    //         id: obj.id,
-    //         name: obj.name,
-    //     });
-    //     return obj.id;
-    // }
-    //
     async insertToDb(): Promise<string> {
         if (!this.id) {
             this.id = uuid();
