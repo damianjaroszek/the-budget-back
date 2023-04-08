@@ -27,7 +27,7 @@ export class CategoryRecord implements CategoryEntity {
 
 // listing all categories from db
     static async getAll(): Promise<CategoryEntity[]> {
-        const [results] = await pool.execute('SELECT `category`.`id`, `category`.`name`, `category`.`is_deletable` AS isDeletable FROM `the_budget`.`category`') as CategoryRecordResult;
+        const [results] = await pool.execute('SELECT `category`.`id`, `category`.`name`, `category`.`is_deletable` AS isDeletable FROM `category`') as CategoryRecordResult;
         return results.map(result => new CategoryRecord(result));
     }
 
@@ -37,7 +37,7 @@ export class CategoryRecord implements CategoryEntity {
             throw new Error(`Category with ${id} is not exist in database.`)
         }
 
-        const [affectedRows] = await pool.execute('DELETE FROM `the_budget`.`category` WHERE `category`.`id`=:id', {
+        const [affectedRows] = await pool.execute('DELETE FROM `category` WHERE `category`.`id`=:id', {
             id,
         });
         return affectedRows as CategoryRecordResult[];
@@ -50,7 +50,7 @@ export class CategoryRecord implements CategoryEntity {
         } else {
             throw new ValidationError('The category is already exist.')
         }
-        await pool.execute('INSERT INTO `the_budget`.`category` (`name`) VALUES (:name)', {
+        await pool.execute('INSERT INTO `category` (`name`) VALUES (:name)', {
             name: this.name,
         });
         return this.id;

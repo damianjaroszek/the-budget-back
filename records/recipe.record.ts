@@ -108,7 +108,7 @@ export class RecipeRecord implements RecipeEntity {
 
 // delete specific recipe from db
     static async deleteFromDb(id: string): Promise<RecipeRecordResult[]> {
-        const [affectedRows] = await pool.execute('DELETE FROM `the_budget`.`expense` WHERE `the_budget`.`expense`.`id`=:id', {
+        const [affectedRows] = await pool.execute('DELETE FROM `expense` WHERE `expense`.`id`=:id', {
             id,
         });
         return affectedRows as RecipeRecordResult[];

@@ -27,7 +27,7 @@ export class ShopRecord implements ShopEntity {
 
 // listing shops from db
     static async getAll(): Promise<ShopEntity[]> {
-        const [results] = await pool.execute('SELECT `id`, `name`, `is_deletable` AS isDeletable FROM `the_budget`.`place`') as ShopRecordResult;
+        const [results] = await pool.execute('SELECT `id`, `name`, `is_deletable` AS isDeletable FROM `place`') as ShopRecordResult;
         return results.map(result => new ShopRecord(result));
     }
 
@@ -37,7 +37,7 @@ export class ShopRecord implements ShopEntity {
             throw new Error(`Shop with ${id} is not exist in database.`)
         }
 
-        const [affectedRows] = await pool.execute('DELETE FROM `the_budget`.`place` WHERE `place`.`id`=:id', {
+        const [affectedRows] = await pool.execute('DELETE FROM `place` WHERE `place`.`id`=:id', {
             id,
         });
         return affectedRows as ShopRecordResult[];
@@ -50,7 +50,7 @@ export class ShopRecord implements ShopEntity {
         } else {
             throw new ValidationError('The shop is already exist.')
         }
-        await pool.execute('INSERT INTO `the_budget`.`place` (`name`) VALUES (:name)', {
+        await pool.execute('INSERT INTO `place` (`name`) VALUES (:name)', {
             name: this.name,
         });
         return this.id;

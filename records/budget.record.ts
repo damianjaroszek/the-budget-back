@@ -24,14 +24,14 @@ export class BudgetRecord implements BudgetEntity {
 
 // getting budget and expense values from db
     static async getBudgetAndExpense(): Promise<BudgetEntity[]> {
-        const [results] = await pool.execute('SELECT (SELECT * FROM `the_budget`.`budget`) AS budget, IFNULL((SELECT SUM(price) FROM `the_budget`.`expense`\n' +
+        const [results] = await pool.execute('SELECT (SELECT * FROM `budget`) AS budget, IFNULL((SELECT SUM(price) FROM `expense`\n' +
             '            WHERE MONTH(`expense`.`date`) = MONTH(NOW()) AND YEAR(`expense`.`date`) = YEAR(NOW())),0) AS expense') as BudgetRecordResult;
         return results.map(result => new BudgetRecord(result));
     }
 
 // updating new value of budget
     static async updateBudget(newBudgetValue: number): Promise<number> {
-        const [results] = ((await pool.execute('UPDATE `the_budget`.`budget`\n' +
+        const [results] = ((await pool.execute('UPDATE `budget`\n' +
             'SET `budget`.`budget` = :newBudgetValue;', {
             newBudgetValue
         })) as ResultSetHeader[]);
