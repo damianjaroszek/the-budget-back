@@ -8,12 +8,13 @@ import {shopRouter} from "./routers/shop.router";
 import {categoryRouter} from "./routers/category.router";
 import {budgetRouter} from "./routers/budget.router";
 import rateLimit from "express-rate-limit";
+import {config} from "./config/config";
 
 const app = express();
 
 // Cors settings
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: config.corsOrigin,
 }));
 
 // It parses incoming JSON requests and puts the parsed data in req.body.
