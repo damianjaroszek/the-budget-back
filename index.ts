@@ -26,7 +26,9 @@ router.use('/product', productRouter)
 router.use('/shop', shopRouter)
 router.use('/category', categoryRouter)
 router.use('/budget', budgetRouter)
-app.use('/api', router);
+
+// Adding prefix to all routers
+app.use('/api2', router);
 
 // Limited requests per IP
 app.use(rateLimit({
