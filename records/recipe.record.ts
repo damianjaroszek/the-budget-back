@@ -22,7 +22,7 @@ export class RecipeRecord implements RecipeEntity {
     categoryName: string;
 
 
-
+// validation of new recipe object
     constructor(obj: NewRecipeEntity) {
         if (!obj.name || obj.name.length > 50) {
             throw new ValidationError('The name can not be empty or contains more than 50 chars.');
@@ -50,6 +50,7 @@ export class RecipeRecord implements RecipeEntity {
 
     }
 
+// getting all recipes from db
     static async getAll(): Promise<RecipeEntity[]> {
         const [results] = await pool.execute('SELECT `expense`.`id`, CAST(DATE(`expense`.`date`) AS CHAR) AS date, `expense`.`price`, `index`.`name`, `place`.`name` AS shopName, `category`.`name` AS categoryName\n' +
             '            FROM `expense`\n' +
@@ -59,6 +60,7 @@ export class RecipeRecord implements RecipeEntity {
         return results.map(result => new RecipeRecord(result));
     }
 
+// getting recipes from the latest week from db
     static async getLastWeek(): Promise<RecipeEntity[]> {
         const [results] = await pool.execute('SELECT `expense`.`id`, CAST(DATE(`expense`.`date`) AS CHAR) AS date, CAST(`expense`.`price` AS CHAR) AS price,\n' +
             '                      `index`.`name`,\n' +
@@ -73,6 +75,7 @@ export class RecipeRecord implements RecipeEntity {
         return results.map(result => new RecipeRecord(result));
     }
 
+// getting recipes by date range from db
     static async getDateRange(firstDate: string, secondDate: string): Promise<RecipeEntity[]> {
         const [results] = await pool.execute('SELECT `expense`.`id`, CAST(DATE(`expense`.`date`) AS CHAR) AS date, CAST(`expense`.`price` AS CHAR) AS price,\n' +
             '                        `index`.`name`,\n' +
@@ -90,7 +93,7 @@ export class RecipeRecord implements RecipeEntity {
         return results.map(result => new RecipeRecord(result));
     }
 
-
+// adding new recipe to db
     static async insertToDb(obj: NewRecipe): Promise<string> {
         obj.id = uuid();
         await pool.execute('INSERT INTO `expense` (`id`, `date`, `price`, `index_id`, `place`) VALUES (:id, :date, :price, :index_id, :place)', {
@@ -103,11 +106,12 @@ export class RecipeRecord implements RecipeEntity {
         return obj.id;
     }
 
-    static async deleteFromDb(id: string): Promise<any> {
-        const affectedRows = await pool.execute('DELETE FROM `the_budget`.`expense` WHERE `the_budget`.`expense`.`id`=:id', {
+// delete specific recipe from db
+    static async deleteFromDb(id: string): Promise<RecipeRecordResult[]> {
+        const [affectedRows] = await pool.execute('DELETE FROM `the_budget`.`expense` WHERE `the_budget`.`expense`.`id`=:id', {
             id,
         });
-        return affectedRows;
+        return affectedRows as RecipeRecordResult[];
     }
 }
 

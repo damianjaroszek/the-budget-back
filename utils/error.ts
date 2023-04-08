@@ -1,5 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 
+// handle error function
+
 export class ValidationError extends Error {
 }
 

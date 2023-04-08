@@ -6,24 +6,32 @@ import {ValidationError} from "../utils/error";
 export const recipeRouter = Router();
 
 recipeRouter
+    // listing all recipes from db
     .get('/listAll', async (req, res) => {
         const recipes: RecipeEntity[] = await RecipeRecord.getAll();
         res.json(recipes);
     })
+
+    // listing the latest week recipes from db
     .get('/listLatestWeek', async (req, res) => {
         const recipes: RecipeEntity[] = await RecipeRecord.getLastWeek();
         res.json(recipes);
     })
+
+    // listing recipes by date range from db
     .get('/getDateRange/:firstDate/:secondDate', async (req, res) => {
         const recipes: RecipeEntity[] = await RecipeRecord.getDateRange(req.params.firstDate, req.params.secondDate);
         res.json(recipes);
     })
+
+    // adding new recipe to db
     .post('/', async (req, res) => {
         const newRecipe = await RecipeRecord.insertToDb(req.body);
-        console.log(req.body);
         res.json(newRecipe);
 
     })
+
+    // deleting specific recipe from db
     .delete('/:id', async (req, res) => {
         const deleteRecipe = await RecipeRecord.deleteFromDb(req.params.id);
         if (!deleteRecipe) {
@@ -31,18 +39,4 @@ recipeRouter
         }
         res.json(deleteRecipe);
     })
-
-// @todo stworzyć dla newRecipe typy, router, rekord --> odrębny byt i dać const newRecipeRecord = new NewRecipeRecord         newRecipeRecord.insert()
-
-// .get('/:id', async (req, res) => {
-//     const ad: AdEntity = await AdRecord.getOne(req.params.id);
-//     res.json(ad);
-// })
-//
-// .post('/', async (req, res) => {
-//     const ad = new AdRecord(req.body);
-//     await ad.insert();
-//     res.json(ad);
-//
-// });
 

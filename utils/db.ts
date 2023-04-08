@@ -1,9 +1,10 @@
 import {createPool} from "mysql2/promise";
 
+// db connection credentials
 export const pool = createPool({
     host: 'localhost',
     user: 'root',
-    //password: '', // nie udostępniamy swoich haseł na github, warto ten plik dodać do .gitignore --> utils/db.ts
+    //password: '',
     database: 'the_budget',
     namedPlaceholders: true,
     decimalNumbers: true,
