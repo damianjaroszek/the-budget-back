@@ -7,29 +7,17 @@ import {productRouter} from "./routers/product.router";
 import {shopRouter} from "./routers/shop.router";
 import {categoryRouter} from "./routers/category.router";
 import {budgetRouter} from "./routers/budget.router";
+import rateLimit from "express-rate-limit";
 
 const app = express();
 
+// Cors settings
 app.use(cors({
     origin: 'http://localhost:3000',
 }));
+
+// It parses incoming JSON requests and puts the parsed data in req.body.
 app.use(json());
-
-// Routers
-
-// app.get('/', async(req, res)=>{
-//     throw new Error('Something was wrong');  // sprawdzamy czy obsługa błędów działa
-// });
-
-// app.get('/', async(req, res)=> {
-//     throw new ValidationError('Something was wrong');  // sprawdzamy czy obsługa błędów działa
-// });
-
-// app.get('/', async (req, res) => {
-//     const recpies: RecipeEntity[] = await RecipeRecord.getAll();
-//     res.json(recpies);
-//     console.log(recpies);
-// });
 
 // Routers
 const router = Router();
@@ -40,6 +28,13 @@ router.use('/category', categoryRouter)
 router.use('/budget', budgetRouter)
 app.use('/api', router);
 
+// Limited requests per IP
+app.use(rateLimit({
+    windowMs: 2 * 60 * 1000,
+    max: 250,
+}))
+
+// error handling
 app.use(handleError);
 
 

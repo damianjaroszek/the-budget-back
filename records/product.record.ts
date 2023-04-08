@@ -11,14 +11,11 @@ export class ProductRecord implements ProductEntity {
 
     id?: string;
     name: string;
-    //weight: number;
     categoryName: string;
     categoryId?: string;
     isDeletable: number;
 
-    //symbol: string;
-
-
+// validation od new product object
     constructor(obj: NewProductEntity) {
         if (!obj.name || obj.name.length > 50) {
             throw new ValidationError('The name can not be empty or contains more than 50 chars.');
@@ -28,22 +25,14 @@ export class ProductRecord implements ProductEntity {
             throw new ValidationError('The name of category can not be empty or contains more than 100 chars.');
         }
 
-        // if (!obj.symbol || obj.symbol.length > 4) {
-        //     throw new ValidationError('The symbol of weight name can not be empty or contains more than 4 chars.');
-        // }
-
         this.id = obj.id;
         this.name = obj.name;
         this.categoryId = obj.categoryId;
-        //this.weight = obj.weight;
         this.categoryName = obj.categoryName;
         this.isDeletable = obj.isDeletable;
-        //this.symbol = obj.symbol;
-
-
     }
 
-
+// listing all products from db
     static async getAll(): Promise<ProductEntity[]> {
         const [results] = await pool.execute('SELECT `index`.`id`, `index`.`name`, `category`.`name` AS categoryName, `index`.`is_deletable` AS isDeletable\n' +
             'FROM `index`\n' +
@@ -51,6 +40,7 @@ export class ProductRecord implements ProductEntity {
         return results.map(result => new ProductRecord(result));
     }
 
+// deleting specific product from db
     static async deleteFromDb(id: string): Promise<ProductEntity[]> {
         if (!id) {
             throw new Error(`Product with ${id} is not exist in database.`)
@@ -62,6 +52,7 @@ export class ProductRecord implements ProductEntity {
         return affectedRows as ProductEntity[];
     }
 
+// adding new product to db
     static async insertToDb(obj: NewProductEntity): Promise<string> {
         if (!obj.id) {
             obj.id = uuid();
@@ -74,6 +65,4 @@ export class ProductRecord implements ProductEntity {
         });
         return obj.id;
     }
-
-
 }
