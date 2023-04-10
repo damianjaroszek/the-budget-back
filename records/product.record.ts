@@ -46,7 +46,7 @@ export class ProductRecord implements ProductEntity {
             throw new Error(`Product with ${id} is not exist in database.`)
         }
 
-        const [affectedRows] = await pool.execute('DELETE FROM `the_budget`.`index` WHERE `index`.`id`=:id', {
+        const [affectedRows] = await pool.execute('DELETE FROM `index` WHERE `index`.`id`=:id', {
             id,
         });
         return affectedRows as ProductEntity[];
@@ -59,7 +59,7 @@ export class ProductRecord implements ProductEntity {
         } else {
             throw new ValidationError('The Product is already exist.')
         }
-        await pool.execute('INSERT INTO `the_budget`.`index` (`name`, `category`) VALUES (:name, :category)', {
+        await pool.execute('INSERT INTO `index` (`name`, `category`) VALUES (:name, :category)', {
             name: obj.name,
             category: obj.categoryId,
         });
