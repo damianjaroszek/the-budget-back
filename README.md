@@ -108,6 +108,11 @@ For build
 
 Need to improve:
 - RWD
+- Form for adding items as a stick button - after click the button a modal should appear with form
+- Chart "expense per category"
+
+## Summary of project
+This project was an amazing adventure through which I learned a lot. The project is not perfect I treated it a bit like a testing ground. For example, Redux-Toolkit was used in part of the project, and normal prop transfer was used in part. This was done intentionally to use and practice both solutions. Many things in the course of writing became clearer I understood a lot of why to do it this way and not that way and why to do it. Due to the limited time I could devote to the project I took the approach of doing everything to prove the application in time to be able to show something to the client therefore I am aware of many mistakes that can be fixed in the future.
 
 # Contact
 
